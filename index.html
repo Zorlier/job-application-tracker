@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>秋招投递管理</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="topbar">
+        <h1>秋招投递管理</h1>
+
+        <div class="header-actions">
+          <button id="exportBtn" class="header-btn" type="button">导出</button>
+          <button id="importBtn" class="header-btn" type="button">导入</button>
+          <button id="logsBtn" class="header-btn" type="button">日志</button>
+          <button id="restoreBtn" class="header-btn" type="button">恢复备份</button>
+          <button class="header-btn danger" type="button" id="clearAllBtn">清空</button>
+        </div>
+      </header>
+
+      <section class="stats-grid" id="statsGrid"></section>
+
+      <section class="analytics-panel" id="analyticsPanel"></section>
+
+      <section class="table-panel">
+        <div class="table-header">
+          <h3>总览表格</h3>
+          <span>按城市 / 公司 / 岗位 / 方向 / 阶段查看</span>
+        </div>
+        <div class="table-wrap">
+          <table id="overviewTable">
+            <thead>
+              <tr>
+                <th>城市</th>
+                <th>公司</th>
+                <th>岗位</th>
+                <th>方向</th>
+                <th>阶段</th>
+                <th>日期</th>
+                <th>渠道</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody id="overviewTableBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="record-box">
+        <div class="record-topbar">
+          <div class="title-wrap">
+            <span class="record-title">投递进度</span>
+          </div>
+          <button class="primary-btn" id="openFormBtn" type="button">＋ 新增公司</button>
+        </div>
+
+        <div class="toolbar">
+          <input id="searchInput" type="text" placeholder="搜索公司 / 职位 / 城市" />
+          <select id="filterStage">
+            <option value="全部">阶段：全部</option>
+            <option value="已投简历">已投简历</option>
+            <option value="简历筛选中">简历筛选中</option>
+            <option value="一面">一面</option>
+            <option value="二面">二面</option>
+            <option value="offer">offer</option>
+            <option value="拒绝">拒绝</option>
+          </select>
+          <select id="filterType">
+            <option value="全部">方向：全部</option>
+            <option value="嵌入式软件">嵌入式软件</option>
+            <option value="驱动开发">驱动开发</option>
+            <option value="BSP/底层开发">BSP/底层开发</option>
+            <option value="FPGA/验证">FPGA/验证</option>
+            <option value="硬件开发">硬件开发</option>
+            <option value="测试开发">测试开发</option>
+          </select>
+          <select id="sortOrder">
+            <option value="time-desc">时间顺序</option>
+            <option value="time-asc">时间倒序</option>
+          </select>
+        </div>
+
+      </section>
+
+      <div id="applicationList" class="application-list"></div>
+    </div>
+
+    <div class="modal hidden" id="formModal" aria-hidden="true">
+      <div class="modal-panel">
+        <div class="modal-header">
+          <h2>新增 / 编辑投递公司</h2>
+          <button class="close-btn" id="closeFormBtn" type="button">×</button>
+        </div>
+
+        <form id="appForm">
+          <input type="hidden" id="recordId" />
+          <div class="form-grid">
+            <label>
+              <span>公司</span>
+              <input type="text" id="company" placeholder="例如：阿里巴巴" required />
+            </label>
+
+            <label>
+              <span>岗位</span>
+              <input type="text" id="position" placeholder="例如：软件测试工程师" required />
+            </label>
+
+            <label>
+              <span>城市</span>
+              <input type="text" id="city" placeholder="例如：上海" />
+            </label>
+
+            <label>
+              <span>岗位方向</span>
+              <select id="type">
+                <option value="嵌入式软件">嵌入式软件</option>
+                <option value="驱动开发">驱动开发</option>
+                <option value="BSP/底层开发">BSP/底层开发</option>
+                <option value="FPGA/验证">FPGA/验证</option>
+                <option value="硬件开发">硬件开发</option>
+                <option value="测试开发">测试开发</option>
+              </select>
+            </label>
+
+            <label>
+              <span>投递日期</span>
+              <input type="date" id="date" required />
+            </label>
+
+            <label>
+              <span>投递渠道</span>
+              <select id="source">
+                <option value="官网">官网</option>
+                <option value="内推">内推</option>
+                <option value="猎头">猎头</option>
+                <option value="校招平台">校招平台</option>
+                <option value="其他">其他</option>
+              </select>
+            </label>
+
+            <label>
+              <span>当前阶段</span>
+              <select id="stage">
+                <option value="已投简历">已投简历</option>
+                <option value="简历筛选中">简历筛选中</option>
+                <option value="一面">一面</option>
+                <option value="二面">二面</option>
+                <option value="offer">offer</option>
+                <option value="拒绝">拒绝</option>
+              </select>
+            </label>
+
+            <label class="full-width">
+              <span>岗位链接</span>
+              <input type="url" id="link" placeholder="https://..." />
+            </label>
+
+            <label class="full-width">
+              <span>面试经验（可选，阶段更新时可补充）</span>
+              <textarea id="interviewExp" rows="3" placeholder="在面试后记录经验，阶段更新时也会提示填写。"></textarea>
+            </label>
+
+            <label class="full-width">
+              <span>备注</span>
+              <textarea id="notes" rows="3" placeholder="如：岗位要求、面试信息、联系状态等"></textarea>
+            </label>
+          </div>
+
+          <div class="form-actions">
+            <button type="button" class="secondary-btn" id="cancelFormBtn">取消</button>
+            <button type="submit" class="primary-btn">保存记录</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+      <div class="modal hidden" id="detailModal" aria-hidden="true">
+        <div class="modal-panel">
+          <div class="modal-header">
+            <h2>投递详情</h2>
+            <button class="close-btn" id="closeDetailBtn" type="button">×</button>
+          </div>
+          <div id="detailContent">
+            <p><strong>公司：</strong> <span id="d_company"></span></p>
+            <p><strong>岗位：</strong> <span id="d_position"></span></p>
+            <p><strong>城市：</strong> <span id="d_city"></span></p>
+            <p><strong>方向：</strong> <span id="d_type"></span></p>
+            <p><strong>阶段：</strong> <span id="d_stage"></span></p>
+            <p><strong>投递日期：</strong> <span id="d_date"></span></p>
+            <p><strong>渠道：</strong> <span id="d_source"></span></p>
+            <p><strong>岗位链接：</strong> <a id="d_link" href="#" target="_blank"></a></p>
+            <div class="card-note" id="d_interviewExp">暂无面试经验</div>
+            <div class="card-note" id="d_notes" style="margin-top:8px;background:#f8fafc;">暂无备注</div>
+          </div>
+        </div>
+      </div>
+
+    <div class="modal hidden" id="logsModal" aria-hidden="true">
+      <div class="modal-panel">
+        <div class="modal-header">
+          <h2>操作日志</h2>
+          <button class="close-btn" id="closeLogsBtn" type="button">×</button>
+        </div>
+        <div id="logsContent" style="max-height:60vh; overflow:auto;">
+          <div class="empty-state">暂无日志</div>
+        </div>
+        <div style="margin-top:12px; display:flex; gap:8px; justify-content:flex-end;">
+          <button id="clearLogsBtn" class="secondary-btn">清空日志</button>
+        </div>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>

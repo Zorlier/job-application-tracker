@@ -7,7 +7,7 @@
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
     <title>秋招投递管理</title>
-    <link rel="stylesheet" href="style.css?v=20260831" />
+    <link rel="stylesheet" href="style.css?v=20260901" />
   </head>
   <body>
     <div class="page-shell">
@@ -64,20 +64,19 @@
           <select id="filterStage">
             <option value="全部">阶段：全部</option>
             <option value="已投简历">已投简历</option>
-            <option value="简历筛选中">简历筛选中</option>
+            <option value="简历挂">简历挂</option>
             <option value="一面">一面</option>
+            <option value="一面挂">一面挂</option>
             <option value="二面">二面</option>
+            <option value="二面挂">二面挂</option>
             <option value="offer">offer</option>
             <option value="拒绝">拒绝</option>
           </select>
           <select id="filterType">
             <option value="全部">方向：全部</option>
-            <option value="嵌入式软件">嵌入式软件</option>
-            <option value="驱动开发">驱动开发</option>
-            <option value="BSP/底层开发">BSP/底层开发</option>
-            <option value="FPGA/验证">FPGA/验证</option>
-            <option value="硬件开发">硬件开发</option>
-            <option value="测试开发">测试开发</option>
+            <option value="嵌入式软件开发">嵌入式软件开发</option>
+            <option value="嵌入式linux驱动开发">嵌入式linux驱动开发</option>
+            <option value="嵌入式bsp开发">嵌入式bsp开发</option>
           </select>
           <select id="sortOrder">
             <option value="time-desc">时间顺序</option>
@@ -117,12 +116,9 @@
             <label>
               <span>岗位方向</span>
               <select id="type">
-                <option value="嵌入式软件">嵌入式软件</option>
-                <option value="驱动开发">驱动开发</option>
-                <option value="BSP/底层开发">BSP/底层开发</option>
-                <option value="FPGA/验证">FPGA/验证</option>
-                <option value="硬件开发">硬件开发</option>
-                <option value="测试开发">测试开发</option>
+                <option value="嵌入式软件开发">嵌入式软件开发</option>
+                <option value="嵌入式linux驱动开发">嵌入式linux驱动开发</option>
+                <option value="嵌入式bsp开发">嵌入式bsp开发</option>
               </select>
             </label>
 
@@ -146,9 +142,11 @@
               <span>当前阶段</span>
               <select id="stage">
                 <option value="已投简历">已投简历</option>
-                <option value="简历筛选中">简历筛选中</option>
+                <option value="简历挂">简历挂</option>
                 <option value="一面">一面</option>
+                <option value="一面挂">一面挂</option>
                 <option value="二面">二面</option>
+                <option value="二面挂">二面挂</option>
                 <option value="offer">offer</option>
                 <option value="拒绝">拒绝</option>
               </select>
@@ -214,6 +212,6 @@
       </div>
     </div>
 
-    <script src="script.js?v=20260831"></script>
+    <script src="script.js?v=20260902"></script>
   </body>
 </html>

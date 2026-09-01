@@ -3,12 +3,38 @@ const LOG_KEY = `${STORAGE_KEY}-log`;
 
 const stageMeta = {
   '已投简历': { className: 'default' },
-  '简历筛选中': { className: 'passed' },
+  '简历挂': { className: 'failed' },
   '一面': { className: 'interview' },
+  '一面挂': { className: 'failed' },
   '二面': { className: 'test' },
+  '二面挂': { className: 'failed' },
   'offer': { className: 'passed' },
   '拒绝': { className: 'failed' }
 };
+
+const TYPE_MIGRATION = {
+  '嵌入式软件': '嵌入式软件开发',
+  '驱动开发': '嵌入式linux驱动开发',
+  'BSP/底层开发': '嵌入式bsp开发'
+};
+
+function migrateTypes() {
+  const data = readData();
+  let changed = false;
+  const next = data.map((item) => {
+    const mapped = TYPE_MIGRATION[item.type];
+    if (mapped && item.type !== mapped) {
+      changed = true;
+      return { ...item, type: mapped };
+    }
+    return item;
+  });
+  if (changed) {
+    saveData(next);
+    addLog('migrate', { company: '数据迁移', position: '岗位方向分类更新' });
+  }
+  return changed;
+}
 
 const appForm = document.getElementById('appForm');
 const appList = document.getElementById('applicationList');
@@ -134,15 +160,15 @@ function getFilteredData() {
 function renderStats() {
   const data = readData();
   const total = data.length;
-  const inProgress = data.filter((item) => ['已投简历', '简历筛选中', '一面', '二面'].includes(item.stage)).length;
-  const screening = data.filter((item) => item.stage === '简历筛选中').length;
+  const inProgress = data.filter((item) => ['已投简历', '一面', '二面'].includes(item.stage)).length;
+  const failed = data.filter((item) => ['简历挂', '一面挂', '二面挂', '拒绝'].includes(item.stage)).length;
   const passed = data.filter((item) => item.stage === 'offer').length;
   const types = new Set(data.map((item) => item.type || '其他')).size;
 
   const stats = [
     { label: '投递总数', value: total },
     { label: '进行中', value: inProgress },
-    { label: '简历筛选', value: screening },
+    { label: '已挂', value: failed },
     { label: 'offer', value: passed },
     { label: '岗位方向', value: types }
   ];
@@ -158,7 +184,7 @@ function renderStats() {
 function renderAnalytics() {
   const data = readData();
   const total = data.length || 1;
-  const stageOrder = ['已投简历', '简历筛选中', '一面', '二面', 'offer', '拒绝'];
+  const stageOrder = ['已投简历', '简历挂', '一面', '一面挂', '二面', '二面挂', 'offer', '拒绝'];
   const stageCounts = stageOrder.map((stage) => ({ stage, count: data.filter((i) => i.stage === stage).length }));
   const maxStage = Math.max(...stageCounts.map((i) => i.count), 1);
 
@@ -172,7 +198,7 @@ function renderAnalytics() {
     const pct = Math.round((item.count / maxStage) * 100);
     let fillClass = '';
     if (item.stage === 'offer') fillClass = 'offer';
-    else if (item.stage === '拒绝') fillClass = 'reject';
+    else if (['简历挂', '一面挂', '二面挂', '拒绝'].includes(item.stage)) fillClass = 'reject';
     else if (item.stage === '一面' || item.stage === '二面') fillClass = 'warning';
     return `
       <div class="stage-row">
@@ -199,7 +225,7 @@ function renderAnalytics() {
   }).join('');
 
   const offerRate = Math.round((data.filter((i) => i.stage === 'offer').length / total) * 100);
-  const inProgress = data.filter((i) => ['已投简历', '简历筛选中', '一面', '二面'].includes(i.stage)).length;
+  const inProgress = data.filter((i) => ['已投简历', '一面', '二面'].includes(i.stage)).length;
 
   analyticsPanel.innerHTML = `
     <div class="analytics-card">
@@ -535,4 +561,5 @@ try {
 } catch {}
 
 document.getElementById('date').valueAsDate = new Date();
+migrateTypes();
 render();

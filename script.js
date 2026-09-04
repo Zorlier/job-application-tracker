@@ -99,6 +99,35 @@ function openModal() {
   formModal.setAttribute('aria-hidden', 'false');
 }
 
+function openAddForm() {
+  appForm.reset();
+  document.getElementById('recordId').value = '';
+  document.getElementById('date').valueAsDate = new Date();
+  setFormMode(false);
+  openModal();
+}
+
+function openEditForm(item) {
+  document.getElementById('recordId').value = item.id;
+  document.getElementById('company').value = item.company || '';
+  document.getElementById('position').value = item.position || '';
+  document.getElementById('city').value = item.city || '';
+  document.getElementById('type').value = item.type || '';
+  document.getElementById('source').value = item.source || '';
+  document.getElementById('date').value = item.date || '';
+  document.getElementById('stage').value = item.stage || '已投简历';
+  document.getElementById('link').value = item.link || '';
+  document.getElementById('interviewExp').value = item.interviewExp || '';
+  document.getElementById('notes').value = item.notes || '';
+  setFormMode(true);
+  openModal();
+}
+
+function setFormMode(isEdit) {
+  document.getElementById('formTitle').textContent = isEdit ? '编辑投递公司' : '新增投递公司';
+  document.getElementById('formSubmitBtn').textContent = isEdit ? '保存修改' : '新增';
+}
+
 function closeModal() {
   formModal.classList.add('hidden');
   formModal.setAttribute('aria-hidden', 'true');
@@ -286,18 +315,7 @@ function renderOverviewTable() {
       const id = button.closest('tr').dataset.id;
       const item = readData().find((it) => it.id === id);
       if (!item) return;
-      document.getElementById('recordId').value = item.id;
-      document.getElementById('company').value = item.company || '';
-      document.getElementById('position').value = item.position || '';
-      document.getElementById('city').value = item.city || '';
-      document.getElementById('type').value = item.type || '';
-      document.getElementById('source').value = item.source || '';
-      document.getElementById('date').value = item.date || '';
-      document.getElementById('stage').value = item.stage || '已投简历';
-      document.getElementById('link').value = item.link || '';
-      document.getElementById('interviewExp').value = item.interviewExp || '';
-      document.getElementById('notes').value = item.notes || '';
-      openModal();
+      openEditForm(item);
     });
   });
 }
@@ -348,18 +366,7 @@ function renderCardList() {
       const id = button.closest('.application-card').dataset.id;
       const item = readData().find((it) => it.id === id);
       if (!item) return;
-      document.getElementById('recordId').value = item.id;
-      document.getElementById('company').value = item.company || '';
-      document.getElementById('position').value = item.position || '';
-      document.getElementById('city').value = item.city || '';
-      document.getElementById('type').value = item.type || '';
-      document.getElementById('source').value = item.source || '';
-      document.getElementById('date').value = item.date || '';
-      document.getElementById('stage').value = item.stage || '已投简历';
-      document.getElementById('link').value = item.link || '';
-      document.getElementById('interviewExp').value = item.interviewExp || '';
-      document.getElementById('notes').value = item.notes || '';
-      openModal();
+      openEditForm(item);
     });
   });
 }
@@ -447,7 +454,7 @@ appForm.addEventListener('submit', (event) => {
   render();
 });
 
-openFormBtn.addEventListener('click', openModal);
+openFormBtn.addEventListener('click', openAddForm);
 closeFormBtn.addEventListener('click', closeModal);
 cancelFormBtn.addEventListener('click', closeModal);
 closeDetailBtn.addEventListener('click', closeDetailModal);

@@ -6,7 +6,9 @@
 
 ### 使用 Windows 可执行文件（推荐）
 
-生成 exe 后，双击 `dist\qiuzhao.exe`。程序会启动本地网页服务并打开默认浏览器，不需要安装 Python 或 Node.js。关闭程序的控制台窗口即可停止服务。此 exe 面向 Windows x64。
+双击项目根目录的 `qiuzhao.exe`。程序会启动本地网页服务并打开默认浏览器，不需要安装 Python 或 Node.js。关闭程序的控制台窗口即可停止服务。此 exe 面向 Windows x64。
+
+如果本机的 8000 端口已被占用，可在命令提示符中使用其他端口启动：`set QIUZHAO_PORT=8001`，再运行 `qiuzhao.exe`。
 
 在 exe 中点击“导出”，备份会自动保存到 exe 同目录下的 `backups` 文件夹，每次导出都会生成带时间戳的新 JSON 文件。首次导出会自动创建文件夹。点击“导入”仍可选择已有的 JSON 备份文件。
 
@@ -17,13 +19,13 @@ npm install
 npm run build:exe
 ```
 
-生成的文件位于 `dist\qiuzhao.exe`。可以把这个 exe 单独发给其他 Windows 用户使用；`dist` 不会提交到 GitHub 仓库。
+生成的文件位于项目根目录的 `qiuzhao.exe`。可以把这个 exe 单独发给其他 Windows 用户使用。
 
 ### 从源码运行
 
 以下方式需要安装 Python：
 
-1. 双击 `run_app.bat`
+1. 双击 `scripts\run_app.bat`
 2. 浏览器访问：
    - http://localhost:8000
 3. 在页面中新增公司、岗位、城市和阶段即可
@@ -44,4 +46,4 @@ npm run build:exe
 
 ## 说明
 
-如果 `run_app.bat` 没有启动，请确认 Python 环境存在，或修改脚本中的 Python 路径。
+如果 `scripts\run_app.bat` 没有启动，请确认 Python 环境存在，或修改脚本中的 Python 路径。

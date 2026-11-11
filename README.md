@@ -2,6 +2,9 @@
 
 这是一个用来记录和管理秋招投递进度的本地网页应用。
 
+
+<img width="1080" height="903" alt="image" src="https://github.com/user-attachments/assets/d92cec36-af1c-4c82-a47c-6a2fa41ad8d5" />
+
 ## 运行方式
 
 ### 使用 Windows 可执行文件（推荐）

@@ -1,0 +1,22 @@
+{
+  "name": "qiuzhao-local-app",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Portable Windows launcher for the job application tracker",
+  "main": "app.js",
+  "bin": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "build:exe": "pkg . --targets node24-win-x64 --output dist/qiuzhao.exe"
+  },
+  "devDependencies": {
+    "@yao-pkg/pkg": "^6.25.0"
+  },
+  "pkg": {
+    "assets": [
+      "index.html",
+      "script.js",
+      "style.css"
+    ]
+  }
+}

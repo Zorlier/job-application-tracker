@@ -470,14 +470,46 @@ overviewBtn.addEventListener('click', () => {
   if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
 });
 
-exportBtn.addEventListener('click', () => {
+exportBtn.addEventListener('click', async () => {
   const raw = JSON.stringify(readData());
+  if (location.protocol !== 'file:') {
+    let response;
+    try {
+      response = await fetch('/api/backup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: raw,
+      });
+    } catch (error) {
+      alert('导出失败：无法连接本地备份服务。' + error.message);
+      return;
+    }
+
+    if (![404, 405, 501].includes(response.status)) {
+      let result;
+      try {
+        result = await response.json();
+      } catch {
+        alert('导出失败：备份服务返回了无效响应');
+        return;
+      }
+      if (!response.ok) {
+        alert('导出失败：' + (result.error || '保存备份失败'));
+        return;
+      }
+      alert(`备份已保存到 exe 同目录的 backups 文件夹：\n${result.filename}`);
+      return;
+    }
+  }
+
   const blob = new Blob([raw], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
   a.download = 'qiuzhao-backup.json';
+  document.body.appendChild(a);
   a.click();
+  a.remove();
   URL.revokeObjectURL(url);
 });
 

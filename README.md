@@ -4,6 +4,25 @@
 
 ## 运行方式
 
+### 使用 Windows 可执行文件（推荐）
+
+生成 exe 后，双击 `dist\qiuzhao.exe`。程序会启动本地网页服务并打开默认浏览器，不需要安装 Python 或 Node.js。关闭程序的控制台窗口即可停止服务。此 exe 面向 Windows x64。
+
+在 exe 中点击“导出”，备份会自动保存到 exe 同目录下的 `backups` 文件夹，每次导出都会生成带时间戳的新 JSON 文件。首次导出会自动创建文件夹。点击“导入”仍可选择已有的 JSON 备份文件。
+
+如果要从源码生成 exe，需要安装 Node.js 22 或更高版本，然后在项目目录运行：
+
+```powershell
+npm install
+npm run build:exe
+```
+
+生成的文件位于 `dist\qiuzhao.exe`。可以把这个 exe 单独发给其他 Windows 用户使用；`dist` 不会提交到 GitHub 仓库。
+
+### 从源码运行
+
+以下方式需要安装 Python：
+
 1. 双击 `run_app.bat`
 2. 浏览器访问：
    - http://localhost:8000
@@ -21,6 +40,7 @@
 ## 数据保存
 
 数据保存在浏览器本地 localStorage 中，刷新页面不丢失。
+通过 GitHub Pages 或 Python 启动时，点击“导出”会由浏览器下载 JSON 备份文件。
 
 ## 说明
 
